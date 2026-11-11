@@ -1,0 +1,44 @@
+name: Build DownX.exe
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pyinstaller
+
+      - name: Install libtorrent (optional, enables torrents)
+        continue-on-error: true
+        run: pip install libtorrent
+
+      - name: Download ffmpeg and place it next to the app
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip" -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg_tmp
+          $exe = Get-ChildItem -Path ffmpeg_tmp -Recurse -Filter ffmpeg.exe | Select-Object -First 1
+          Copy-Item $exe.FullName -Destination ffmpeg.exe
+
+      - name: Build exe
+        shell: pwsh
+        run: |
+          python -c "import libtorrent" 2>$null
+          if ($LASTEXITCODE -eq 0) { $extra = "--collect-all libtorrent" } else { $extra = "" }
+          pyinstaller --noconfirm --onefile --windowed --name DownX --collect-all customtkinter --add-binary "ffmpeg.exe;." $extra main.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DownX-windows
+          path: dist/DownX.exe

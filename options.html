@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>DownX Sender: Options</title>
+  <style>
+    body { max-width: 520px; margin: 40px auto; font-family: system-ui, sans-serif;
+           background: #1e1f24; color: #eee; padding: 0 16px; }
+    h1 { color: #E0A84F; }
+    label { display: block; margin: 16px 0 6px; }
+    input { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 8px;
+            border: 1px solid #444; background: #2a2c33; color: #eee; font-family: monospace; }
+    .row { display: flex; gap: 10px; margin-top: 20px; }
+    button { padding: 10px 16px; border: 0; border-radius: 8px; background: #E0A84F;
+             color: #1a1a1a; font-weight: 600; cursor: pointer; }
+    button.secondary { background: transparent; color: #E0A84F; border: 1px solid #E0A84F; }
+    #msg { margin-top: 14px; min-height: 18px; }
+    .ok { color: #7bd389; } .err { color: #E07A5F; }
+  </style>
+</head>
+<body>
+  <h1>DownX Sender</h1>
+  <p>Paste the token shown in DownX → Settings.</p>
+  <label for="token">Token</label>
+  <input id="token" type="text" autocomplete="off">
+  <label for="port">Port (default 47823)</label>
+  <input id="port" type="number" value="47823">
+  <div class="row">
+    <button id="save">Save</button>
+    <button id="test" class="secondary">Test connection</button>
+  </div>
+  <div id="msg"></div>
+  <script src="options.js"></script>
+</body>
+</html>
